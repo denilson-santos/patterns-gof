@@ -6,7 +6,9 @@
     "strict": true,
     "strictPropertyInitialization": false,
     "baseUrl": "./src",
-    "paths": {},
+    "paths": {
+      "@patterns/*": ["patterns/*"]
+    },
     "esModuleInterop": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
