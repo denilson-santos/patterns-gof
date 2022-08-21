@@ -1,25 +1,39 @@
-# Stage 1
-FROM node:16.16-alpine as base
-
-RUN apk update \ 
-  && npm install --location=global npm@latest
+# Stage 1 - Build
+FROM node:16.16-slim as build
 
 WORKDIR /usr/app
 
-EXPOSE 3333
-
-# Stage 2
-FROM base as production
+RUN apt-get update -y && \ 
+  npm install --location=global npm@latest
 
 COPY package*.json ./
 
-RUN npm install --production \
-  && npm run build
+RUN npm ci && npm cache clean --force
 
-COPY /dist ./
+COPY . .
+  
+RUN npm run build
+
+# Stage 2 - Production
+FROM node:16.16-alpine as production
+
+WORKDIR /usr/app
+
+RUN apk update && \ 
+  npm install --location=global npm@latest
+
+ENV NODE_ENV=production
+
+COPY package*.json ./
+
+RUN npm ci && npm cache clean --force
+
+COPY --from=build /usr/app/dist ./dist
 
 RUN chown -R node:node .
 
 USER node
 
-CMD ["node", "dist/index.js"]
+EXPOSE 3333
+
+CMD ["node", "./dist/src/index.js"]
