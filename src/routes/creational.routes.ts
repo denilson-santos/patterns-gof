@@ -1,8 +1,8 @@
 import { Request, Response, Router } from 'express';
 
 import { MyDatabaseClassic } from '@creational/singleton/db/my-database-classic';
-import { MyDatabaseModule } from '@creational/singleton/db/my-database-module';
 import { MyDatabaseFunction } from '@creational/singleton/db/my-database-function';
+import { MyDatabaseModule } from '@creational/singleton/db/my-database-module';
 
 export const creationalRouter = Router();
 
