@@ -3,12 +3,13 @@
     "target": "ES2021",
     "module": "commonjs",
     "outDir": "./dist",
-    "strict": true,
-    "strictPropertyInitialization": false,
     "baseUrl": "./src",
     "paths": {
-      "@patterns/*": ["patterns/*"]
+      "@creational/*": ["patterns/creational/*"],
+      "@routes/*": ["routes/*"]
     },
+    "strict": true,
+    "strictPropertyInitialization": false,
     "esModuleInterop": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
@@ -16,5 +17,6 @@
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true
   },
-  "exclude": ["node_modules"]
+  "include": ["src/**/*", ".env"],
+  "exclude": ["node_modules", "src/**/*.spec.*"]
 }

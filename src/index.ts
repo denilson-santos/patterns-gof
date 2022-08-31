@@ -1,13 +1,13 @@
-import express, { json, Request, Response } from 'express';
+import express, { json } from 'express';
+
+import { routes } from './routes';
 
 const app = express();
 
 app.use(json());
 
-app.listen(3333);
+app.use(routes);
 
-app.get('/', (request: Request, response: Response) => {
-  response.json({
-    message: 'Hello World!',
-  });
+app.listen(3333, () => {
+  console.log('Server started in: http://localhost:3333');
 });

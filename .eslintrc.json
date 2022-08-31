@@ -82,7 +82,6 @@
     "no-throw-literal": "error",
     "no-undef-init": "error",
     "no-unneeded-ternary": "warn",
-    "no-use-before-define": ["error", "nofunc"],
     "no-useless-concat": "warn",
     "no-var": "warn",
     "padding-line-between-statements": [
@@ -155,6 +154,19 @@
         "memberSyntaxSortOrder": ["none", "all", "multiple", "single"],
         "allowSeparatedGroups": true
       }
-    ]
+    ],
+    "@typescript-eslint/no-empty-function": [
+      "error",
+      {
+        "allow": ["private-constructors"]
+      }
+    ],
+    "no-use-before-define": "off"
+  },
+  "settings": {
+    "import/resolver": {
+      "typescript": {},
+      "node": ["ts"]
+    }
   }
 }
