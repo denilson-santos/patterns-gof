@@ -1,5 +1,7 @@
 import { Request, Response, Router } from 'express';
 
+import { MealDirector } from '@creational/builder/classes/meal-director';
+import { MealWithoutDessertDirector } from '@creational/builder/classes/meal-without-dessert-director';
 import { MyDatabaseClassic } from '@creational/singleton/db/my-database-classic';
 import { MyDatabaseFunction } from '@creational/singleton/db/my-database-function';
 import { MyDatabaseModule } from '@creational/singleton/db/my-database-module';
@@ -116,3 +118,19 @@ creationalRouter.get(
     });
   }
 );
+
+creationalRouter.get('/builder', (request: Request, response: Response) => {
+  const meal1 = MealDirector.build();
+  const meal1TotalPrice = meal1.getPrice();
+
+  const meal2 = MealWithoutDessertDirector.build();
+  const meal2TotalPrice = meal2.getPrice();
+
+  response.json({
+    type: 'classic',
+    meal1,
+    meal1TotalPrice,
+    meal2,
+    meal2TotalPrice,
+  });
+});
