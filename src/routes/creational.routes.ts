@@ -5,6 +5,8 @@ import { MealWithoutDessertDirector } from '@creational/builder/classes/meal-wit
 import { MyDatabaseClassic } from '@creational/singleton/db/my-database-classic';
 import { MyDatabaseFunction } from '@creational/singleton/db/my-database-function';
 import { MyDatabaseModule } from '@creational/singleton/db/my-database-module';
+import { Person } from '@creational/prototype/js/constructor-function';
+import { personPrototype } from '@creational/prototype/js/object';
 
 export const creationalRouter = Router();
 
@@ -134,3 +136,30 @@ creationalRouter.get('/builder', (request: Request, response: Response) => {
     meal2TotalPrice,
   });
 });
+
+creationalRouter.get(
+  '/prototype/js-object',
+  (request: Request, response: Response) => {
+    const person1 = Object.create(personPrototype);
+
+    response.json({
+      type: 'js',
+      person1,
+      person1PrototypeFirstName: person1.firstName,
+      person1PrototypeFullName: person1.fullName(),
+    });
+  }
+);
+
+creationalRouter.get(
+  '/prototype/js-constructor-function',
+  (request: Request, response: Response) => {
+    const person1: any = new Person('Márcia', 'Santana', 22);
+
+    response.json({
+      type: 'js',
+      person1,
+      person1PrototypeFullName: person1.fullName(),
+    });
+  }
+);
