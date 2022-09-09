@@ -1,5 +1,6 @@
 import { Request, Response, Router } from 'express';
 
+import { Address } from '@creational/prototype/classic/classes/address';
 import { MealDirector } from '@creational/builder/classes/meal-director';
 import { MealWithoutDessertDirector } from '@creational/builder/classes/meal-without-dessert-director';
 import { MyDatabaseClassic } from '@creational/singleton/db/my-database-classic';
@@ -7,6 +8,8 @@ import { MyDatabaseFunction } from '@creational/singleton/db/my-database-functio
 import { MyDatabaseModule } from '@creational/singleton/db/my-database-module';
 import { Person } from '@creational/prototype/js/constructor-function';
 import { personPrototype } from '@creational/prototype/js/object';
+import { PersonPrototypeDeep } from '@creational/prototype/classic/classes/prototype-deep';
+import { PersonPrototypeShallow } from '@creational/prototype/classic/classes/prototype-shallow';
 
 export const creationalRouter = Router();
 
@@ -160,6 +163,59 @@ creationalRouter.get(
       type: 'js',
       person1,
       person1PrototypeFullName: person1.fullName(),
+    });
+  }
+);
+
+creationalRouter.get(
+  '/prototype/shallow-copy',
+  (request: Request, response: Response) => {
+    const address1 = new Address('Rua A', 95);
+
+    const person1 = new PersonPrototypeShallow('João Carlos', 48);
+    const person2 = person1.clone();
+
+    person1.addAddress(address1);
+    person2.name = 'Bruna Silva';
+
+    // Ao usar o prototype com shallow copy, os estados dos objetos prototypes linkados, são perdidos. Para manter a modificação apenas no objeto desejado, será necessário utilizar a clonagem de todas as propriedades do objeto (deep copy).
+    person1.addresses[0].street = 'Rua B';
+
+    response.json({
+      type: 'shallow-copy',
+      person1,
+      person1Name: person1.name,
+      person1Addresses: person1.addresses,
+      person2,
+      person2Name: person2.name,
+      person2Addresses: person2.addresses,
+    });
+  }
+);
+
+creationalRouter.get(
+  '/prototype/deep-copy',
+  (request: Request, response: Response) => {
+    const address1 = new Address('Rua A', 95);
+    const person1 = new PersonPrototypeDeep('João Carlos', 48);
+
+    person1.addAddress(address1);
+
+    const person2 = person1.clone();
+
+    person2.name = 'Bruna Silva';
+
+    // Ao usar o prototype com shallow copy, os estados dos objetos prototypes linkados, são perdidos. Para manter a modificação apenas no objeto desejado, será necessário utilizar a clonagem de todas as propriedades do objeto (deep copy).
+    person1.addresses[0].street = 'Rua B';
+
+    response.json({
+      type: 'deep-copy',
+      person1,
+      person1Name: person1.name,
+      person1Addresses: person1.addresses,
+      person2,
+      person2Name: person2.name,
+      person2Addresses: person2.addresses,
     });
   }
 );
