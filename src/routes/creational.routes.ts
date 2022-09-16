@@ -1,6 +1,7 @@
 import { Request, Response, Router } from 'express';
 
 import { Address } from '@creational/prototype/classic/classes/address';
+import { CarFactory } from '@creational/factory-method/classes/car-factory';
 import { MealDirector } from '@creational/builder/classes/meal-director';
 import { MealWithoutDessertDirector } from '@creational/builder/classes/meal-without-dessert-director';
 import { MyDatabaseClassic } from '@creational/singleton/db/my-database-classic';
@@ -216,6 +217,26 @@ creationalRouter.get(
       person2,
       person2Name: person2.name,
       person2Addresses: person2.addresses,
+    });
+  }
+);
+
+creationalRouter.get(
+  '/factory-method',
+  (request: Request, response: Response) => {
+    const carFactory = new CarFactory();
+
+    const car1 = carFactory.create('Car 1');
+
+    const car2 = carFactory.create('Car 2');
+
+    response.json({
+      type: 'classic',
+      car1,
+      car1Pickup: car1.pickup('Denilson'),
+      car1Stop: car1.stop(),
+      car2Pickup: car2.pickup('Caroline'),
+      car2Stop: car2.stop(),
     });
   }
 );
