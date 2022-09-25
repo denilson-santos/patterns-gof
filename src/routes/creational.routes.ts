@@ -11,6 +11,8 @@ import { Person } from '@creational/prototype/js/constructor-function';
 import { personPrototype } from '@creational/prototype/js/object';
 import { PersonPrototypeDeep } from '@creational/prototype/classic/classes/prototype-deep';
 import { PersonPrototypeShallow } from '@creational/prototype/classic/classes/prototype-shallow';
+import { IndividualCustomerVehicleFactory } from '@creational/abstract-factory/modules/factories/individual-customer-vehicle-factory';
+import { EnterpriseCustomerVehicleFactory } from '@creational/abstract-factory/modules/factories/enterprise-customer-vehicle-factory';
 
 export const creationalRouter = Router();
 
@@ -237,6 +239,25 @@ creationalRouter.get(
       car1Stop: car1.stop(),
       car2Pickup: car2.pickup('Caroline'),
       car2Stop: car2.stop(),
+    });
+  }
+);
+
+creationalRouter.get(
+  '/abstract-factory',
+  (request: Request, response: Response) => {
+    const individualFactory = new IndividualCustomerVehicleFactory();
+    const individualCar = individualFactory.createVehicle('Car 1', 'Denilson');
+
+    const enterpriseFactory = new EnterpriseCustomerVehicleFactory();
+    const enterpriseCar = enterpriseFactory.createVehicle('Car 2', 'Denilson');
+
+    response.json({
+      type: 'classic',
+      individualCar,
+      individualCarPickup: individualCar.pickUp(),
+      enterpriseCar,
+      enterpriseCarPickup: enterpriseCar.pickUp(),
     });
   }
 );
