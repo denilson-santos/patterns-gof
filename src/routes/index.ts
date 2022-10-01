@@ -1,6 +1,7 @@
 import { Request, Response, Router } from 'express';
 
 import { creationalRouter } from './creational.routes';
+import { structuralRouter } from './structural.routes';
 
 export const routes = Router();
 
@@ -11,3 +12,4 @@ routes.get('/', (request: Request, response: Response) => {
 });
 
 routes.use('/creational', creationalRouter);
+routes.use('/structural', structuralRouter);
