@@ -1,5 +1,6 @@
 import { Request, Response, Router } from 'express';
 
+import { EmailValidatorAdapter } from 'patterns/structural/adapter/classes/email-validator-adapter';
 import { ProductComposite } from 'patterns/structural/composite/classes/product-composite';
 import { ProductLeaf } from 'patterns/structural/composite/classes/product-leaf';
 
@@ -47,5 +48,15 @@ structuralRouter.get('/composite', (request: Request, response: Response) => {
   response.json({
     type: 'classic',
     productsBoxPrice: productsBox.getPrice(),
+  });
+});
+
+structuralRouter.get('/adapter', (request: Request, response: Response) => {
+  const emailValitadorAdapter = new EmailValidatorAdapter();
+
+  response.json({
+    type: 'classic',
+    email1IsValid: emailValitadorAdapter.validate('denilson@gmail.com'),
+    email2IsValid: emailValitadorAdapter.validate('denilson.com'),
   });
 });
