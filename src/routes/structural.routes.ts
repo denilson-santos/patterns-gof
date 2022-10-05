@@ -1,7 +1,12 @@
 import { Request, Response, Router } from 'express';
 
+import { AdvancedRemote } from 'patterns/structural/bridge/classes/advanced-remote';
+import { EmailValidatorAdapter } from 'patterns/structural/adapter/classes/email-validator-adapter';
 import { ProductComposite } from 'patterns/structural/composite/classes/product-composite';
 import { ProductLeaf } from 'patterns/structural/composite/classes/product-leaf';
+import { Radio } from 'patterns/structural/bridge/classes/radio';
+import { Remote } from 'patterns/structural/bridge/classes/remote';
+import { Tv } from 'patterns/structural/bridge/classes/tv';
 
 export const structuralRouter = Router();
 
@@ -47,5 +52,50 @@ structuralRouter.get('/composite', (request: Request, response: Response) => {
   response.json({
     type: 'classic',
     productsBoxPrice: productsBox.getPrice(),
+  });
+});
+
+structuralRouter.get('/adapter', (request: Request, response: Response) => {
+  const emailValitadorAdapter = new EmailValidatorAdapter();
+
+  response.json({
+    type: 'classic',
+    email1IsValid: emailValitadorAdapter.validate('denilson@gmail.com'),
+    email2IsValid: emailValitadorAdapter.validate('denilson.com'),
+  });
+});
+
+structuralRouter.get('/bridge', (request: Request, response: Response) => {
+  const device1 = new Radio();
+  const device2 = new Tv();
+
+  const remoteControl1 = new Remote(device1);
+  const remoteControl2 = new AdvancedRemote(device2);
+
+  remoteControl1.togglePower();
+  remoteControl1.channelUp();
+  remoteControl1.channelUp();
+  remoteControl1.channelDown();
+  remoteControl1.volumeUp();
+  remoteControl1.volumeUp();
+  remoteControl1.volumeUp();
+  remoteControl1.volumeDown();
+  remoteControl1.togglePower();
+
+  remoteControl2.togglePower();
+  remoteControl2.volumeUp();
+  remoteControl2.volumeUp();
+  remoteControl2.volumeUp();
+  remoteControl2.volumeUp();
+  remoteControl2.volumeUp();
+  remoteControl2.volumeUp();
+  remoteControl2.volumeDown();
+  remoteControl2.mute();
+  remoteControl2.unmute();
+  remoteControl2.togglePower();
+
+  response.json({
+    type: 'classic',
+    result: 'Check console',
   });
 });
