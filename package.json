@@ -10,6 +10,7 @@
     "prod": "node dist/src/index.js"
   },
   "dependencies": {
+    "email-validator": "^2.0.4",
     "express": "^4.18.1"
   },
   "devDependencies": {
