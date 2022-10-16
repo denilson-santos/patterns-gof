@@ -1,9 +1,6 @@
 import { Request, Response, Router } from 'express';
 
-<<<<<<< HEAD
 import { AdvancedRemote } from 'patterns/structural/bridge/classes/advanced-remote';
-=======
->>>>>>> 978186b60cfb0b9b0ae6bddab4bef4c03e8212dd
 import { EmailValidatorAdapter } from 'patterns/structural/adapter/classes/email-validator-adapter';
 import { ProductComposite } from 'patterns/structural/composite/classes/product-composite';
 import { ProductLeaf } from 'patterns/structural/composite/classes/product-leaf';
