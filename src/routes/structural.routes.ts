@@ -7,6 +7,9 @@ import { ProductLeaf } from 'patterns/structural/composite/classes/product-leaf'
 import { Radio } from 'patterns/structural/bridge/classes/radio';
 import { Remote } from 'patterns/structural/bridge/classes/remote';
 import { Tv } from 'patterns/structural/bridge/classes/tv';
+import { TShirt } from 'patterns/structural/decorator/classes/t-shirt';
+import { StampDecorator } from 'patterns/structural/decorator/classes/stamp-decorator';
+import { TextDecorator } from 'patterns/structural/decorator/classes/text-decorator';
 
 export const structuralRouter = Router();
 
@@ -97,5 +100,23 @@ structuralRouter.get('/bridge', (request: Request, response: Response) => {
   response.json({
     type: 'classic',
     result: 'Check console',
+  });
+});
+
+structuralRouter.get('/decorator', (request: Request, response: Response) => {
+  const tshirt = new TShirt('Camiseta #1', 'M', 50);
+  const tshirtStamped = new StampDecorator(tshirt, 'M', 25);
+  const tshirtNamed = new TextDecorator(tshirt, 'Denilson S. Santos');
+  const tshirtStampedNamed = new TextDecorator(
+    tshirtStamped,
+    'Denilson S. Santos'
+  );
+
+  response.json({
+    type: 'classic',
+    tshirtPrice: tshirt.getPrice(),
+    tshirtStampedPrice: tshirtStamped.getPrice(),
+    tshirtNamedPrice: tshirtNamed.getPrice(),
+    tshirtStampedNamedPrice: tshirtStampedNamed.getPrice(),
   });
 });
