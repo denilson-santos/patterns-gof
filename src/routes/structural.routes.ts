@@ -1,15 +1,16 @@
 import { Request, Response, Router } from 'express';
 
 import { AdvancedRemote } from 'patterns/structural/bridge/classes/advanced-remote';
+import { BuilderMealFacade } from 'patterns/structural/facade/builder-facade';
 import { EmailValidatorAdapter } from 'patterns/structural/adapter/classes/email-validator-adapter';
 import { ProductComposite } from 'patterns/structural/composite/classes/product-composite';
 import { ProductLeaf } from 'patterns/structural/composite/classes/product-leaf';
 import { Radio } from 'patterns/structural/bridge/classes/radio';
 import { Remote } from 'patterns/structural/bridge/classes/remote';
-import { Tv } from 'patterns/structural/bridge/classes/tv';
-import { TShirt } from 'patterns/structural/decorator/classes/t-shirt';
 import { StampDecorator } from 'patterns/structural/decorator/classes/stamp-decorator';
 import { TextDecorator } from 'patterns/structural/decorator/classes/text-decorator';
+import { TShirt } from 'patterns/structural/decorator/classes/t-shirt';
+import { Tv } from 'patterns/structural/bridge/classes/tv';
 
 export const structuralRouter = Router();
 
@@ -118,5 +119,20 @@ structuralRouter.get('/decorator', (request: Request, response: Response) => {
     tshirtStampedPrice: tshirtStamped.getPrice(),
     tshirtNamedPrice: tshirtNamed.getPrice(),
     tshirtStampedNamedPrice: tshirtStampedNamed.getPrice(),
+  });
+});
+
+structuralRouter.get('/facade', (request: Request, response: Response) => {
+  const builderMealFacade = new BuilderMealFacade();
+
+  const meal = builderMealFacade.makeMeal();
+  const mealWithoutDessert = builderMealFacade.makeMealWithoutDessert();
+
+  response.json({
+    type: 'classic',
+    meal,
+    mealPrice: meal.getPrice(),
+    mealWithoutDessert,
+    mealWithoutDessertPrice: mealWithoutDessert.getPrice(),
   });
 });
