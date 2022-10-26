@@ -11,6 +11,8 @@ import { StampDecorator } from 'patterns/structural/decorator/classes/stamp-deco
 import { TextDecorator } from 'patterns/structural/decorator/classes/text-decorator';
 import { TShirt } from 'patterns/structural/decorator/classes/t-shirt';
 import { Tv } from 'patterns/structural/bridge/classes/tv';
+import { UserRepository } from 'patterns/structural/proxy/repositories/user/user-repository';
+import { UserRepositoryProxy } from 'patterns/structural/proxy/repositories/user/user-repository-proxy';
 
 export const structuralRouter = Router();
 
@@ -134,5 +136,19 @@ structuralRouter.get('/facade', (request: Request, response: Response) => {
     mealPrice: meal.getPrice(),
     mealWithoutDessert,
     mealWithoutDessertPrice: mealWithoutDessert.getPrice(),
+  });
+});
+
+structuralRouter.get('/proxy', async (request: Request, response: Response) => {
+  const userRepository = new UserRepository();
+  const userRepositoryProxy = new UserRepositoryProxy(userRepository);
+
+  const users = await userRepositoryProxy.list();
+  const cachedUsers = await userRepositoryProxy.list();
+
+  response.json({
+    type: 'classic',
+    users,
+    cachedUsers,
   });
 });
