@@ -3,6 +3,7 @@ import { Request, Response, Router } from 'express';
 import { AdvancedRemote } from 'patterns/structural/bridge/classes/advanced-remote';
 import { BuilderMealFacade } from 'patterns/structural/facade/builder-facade';
 import { EmailValidatorAdapter } from 'patterns/structural/adapter/classes/email-validator-adapter';
+import { ParticleContext } from 'patterns/structural/flyweight/classes/particle-context';
 import { ProductComposite } from 'patterns/structural/composite/classes/product-composite';
 import { ProductLeaf } from 'patterns/structural/composite/classes/product-leaf';
 import { Radio } from 'patterns/structural/bridge/classes/radio';
@@ -152,3 +153,44 @@ structuralRouter.get('/proxy', async (request: Request, response: Response) => {
     cachedUsers,
   });
 });
+
+structuralRouter.get(
+  '/flyweight',
+  async (request: Request, response: Response) => {
+    const particleTypes: ('bullet' | 'missile' | 'shrapnel')[] = [
+      'bullet',
+      'missile',
+      'shrapnel',
+    ];
+    const particleColors = ['red', 'green', 'blue', 'yellow', 'white', 'gray'];
+
+    const particles = [];
+
+    for (let index = 0; index < 50; index++) {
+      const randomParticleType =
+        particleTypes[Math.floor(Math.random() * particleTypes.length)];
+      const randomParticleColor =
+        particleColors[Math.floor(Math.random() * particleColors.length)];
+
+      const particle = new ParticleContext(
+        {
+          color: randomParticleColor,
+          type: randomParticleType,
+        },
+        {
+          speed: 60 * index,
+          coordinates: { x: 50 * index, y: 70 * index },
+        }
+      );
+
+      particle.draw();
+
+      particles.push(particle);
+    }
+
+    response.json({
+      type: 'classic',
+      particles,
+    });
+  }
+);
