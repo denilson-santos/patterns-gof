@@ -13,6 +13,7 @@ import { TShirt } from 'patterns/structural/decorator/classes/t-shirt';
 import { Tv } from 'patterns/structural/bridge/classes/tv';
 import { UserRepository } from 'patterns/structural/proxy/repositories/user/user-repository';
 import { UserRepositoryProxy } from 'patterns/structural/proxy/repositories/user/user-repository-proxy';
+import { ParticleContext } from 'patterns/structural/flyweight/classes/particle-context';
 
 export const structuralRouter = Router();
 
@@ -152,3 +153,27 @@ structuralRouter.get('/proxy', async (request: Request, response: Response) => {
     cachedUsers,
   });
 });
+
+structuralRouter.get(
+  '/flyweight',
+  async (request: Request, response: Response) => {
+    // 'bullet' | 'missile' | 'shrapnel';
+
+    const particleBullet1 = new ParticleContext(
+      {
+        color: 'red',
+        type: 'bullet',
+      },
+      {
+        speed: 60,
+        coordinates: { x: 50, y: 70 },
+      }
+    );
+
+    particleBullet1.draw();
+
+    response.json({
+      type: 'classic',
+    });
+  }
+);
