@@ -1,5 +1,5 @@
 # Stage 1 - Build
-FROM node:16.16-slim as build
+FROM node:16.16 as build
 
 WORKDIR /usr/app
 
