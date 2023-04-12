@@ -1,6 +1,8 @@
 import { Request, Response, Router } from 'express';
 
 import { Address } from '@creational/prototype/classic/classes/address';
+import { CarBuilder } from '@creational/builder/classes/car-builder';
+import { CarDirector } from '@creational/builder/classes/car-director';
 import { CarFactory } from '@creational/factory-method/classes/car-factory';
 import { EnterpriseCustomerVehicleFactory } from '@creational/abstract-factory/modules/factories/enterprise-customer-vehicle-factory';
 import { IndividualCustomerVehicleFactory } from '@creational/abstract-factory/modules/factories/individual-customer-vehicle-factory';
@@ -134,12 +136,33 @@ creationalRouter.get('/builder', (request: Request, response: Response) => {
   const meal2 = MealWithoutDessertDirector.build();
   const meal2TotalPrice = meal2.getPrice();
 
+  const car = new CarBuilder()
+    .model('Camaro')
+    .year(2018)
+    .engine(3.0)
+    .seats(5)
+    .price(800000)
+    .build();
+
+  car.show();
+
+  const carDirector = new CarDirector();
+  const carBuilder = new CarBuilder();
+
+  carDirector.buildFerrari(carBuilder);
+
+  const car2 = carBuilder.build();
+
+  car2.show();
+
   response.json({
     type: 'classic',
     meal1,
     meal1TotalPrice,
     meal2,
     meal2TotalPrice,
+    carWithoutDirector: car,
+    carWithDirector: car2,
   });
 });
 
