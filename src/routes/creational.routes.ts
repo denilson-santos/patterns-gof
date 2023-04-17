@@ -15,6 +15,7 @@ import { Person } from '@creational/prototype/js/constructor-function';
 import { personPrototype } from '@creational/prototype/js/object';
 import { PersonPrototypeDeep } from '@creational/prototype/classic/classes/prototype-deep';
 import { PersonPrototypeShallow } from '@creational/prototype/classic/classes/prototype-shallow';
+import { MotorcycleFactory } from '@creational/factory-method/classes/motorcycle-factory';
 
 export const creationalRouter = Router();
 
@@ -255,13 +256,26 @@ creationalRouter.get(
 
     const car2 = carFactory.create('Car 2');
 
+    const motorcycleFactory = new MotorcycleFactory();
+
+    const motorcycle1 = motorcycleFactory.create('Motorcycle 1');
+
+    const motorcycle2 = motorcycleFactory.create('Motorcycle 2');
+
     response.json({
       type: 'classic',
       car1,
       car1Pickup: car1.pickup('Denilson'),
       car1Stop: car1.stop(),
+      car2,
       car2Pickup: car2.pickup('Caroline'),
       car2Stop: car2.stop(),
+      motorcycle1,
+      motorcycle1Pickup: motorcycle1.pickup('Marcela'),
+      motorcycle1Stop: motorcycle1.stop(),
+      motorcycle2,
+      motorcycle2Pickup: motorcycle2.pickup('João'),
+      motorcycle2Stop: motorcycle2.stop(),
     });
   }
 );
