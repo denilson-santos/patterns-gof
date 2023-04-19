@@ -67,8 +67,8 @@ structuralRouter.get('/adapter', (request: Request, response: Response) => {
 
   response.json({
     type: 'classic',
-    email1IsValid: emailValitadorAdapter.validate('denilson@gmail.com'),
-    email2IsValid: emailValitadorAdapter.validate('denilson.com'),
+    email1IsValid: emailValitadorAdapter.isValid('denilson@gmail.com'),
+    email2IsValid: emailValitadorAdapter.isValid('denilson.com'),
   });
 });
 
