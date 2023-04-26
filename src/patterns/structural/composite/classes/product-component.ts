@@ -6,10 +6,6 @@ export abstract class ProductComponent {
     return this.price;
   }
 
-  protected setPrice(price: number): void {
-    this.price = price;
-  }
-
   public getParent(): ProductComponent | undefined {
     return this.parent;
   }
