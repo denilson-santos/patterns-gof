@@ -1,5 +1,6 @@
 import { Request, Response, Router } from 'express';
 
+import { BrightnessLightCommand } from 'patterns/behavioural/command/classes/britghtness-light-command';
 import { CEOBudgetHandler } from 'patterns/behavioural/chain-of-responsibility/classes/ceo-budget-handler';
 import { CustomerBudget } from 'patterns/behavioural/chain-of-responsibility/classes/customer-budget';
 import { DirectorBudgetHandler } from 'patterns/behavioural/chain-of-responsibility/classes/director-budget-handler';
@@ -75,16 +76,23 @@ behaviouralRouter.get('/command', (request: Request, response: Response) => {
   const receiver2 = new Light();
 
   invoker.addCommand('on', new PowerLightCommand(receiver1));
-  invoker.addCommand('off', new PowerLightCommand(receiver1));
-  invoker.addCommand('brightUp', new PowerLightCommand(receiver1));
-  invoker.addCommand('brightDown', new PowerLightCommand(receiver1));
+  invoker.addCommand('brightUp', new BrightnessLightCommand(receiver1));
 
-  invoker.executeCommands('on', 'brightUp', 'brightUp', 'brightUp', 'off');
+  invoker.executeCommands('on', 'brightUp');
+  invoker.undoCommands('brightUp', 'on');
 
   invoker2.addCommand('on', new PowerLightCommand(receiver2));
-  invoker2.addCommand('brightUp', new PowerLightCommand(receiver2));
+  invoker2.addCommand('brightUp', new BrightnessLightCommand(receiver2));
 
-  invoker.executeCommands('on', 'brightUp', 'brightUp', 'brightUp', 'off');
+  invoker2.executeCommands('on');
+  invoker2.undoCommands(
+    'brightUp',
+    'brightUp',
+    'brightUp',
+    'brightUp',
+    'brightUp',
+    'on'
+  );
 
   response.json({
     type: 'classic',
