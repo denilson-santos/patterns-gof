@@ -10,4 +10,8 @@ export class UniversalLightControl {
   public executeCommands(...buttons: string[]): void {
     buttons.map((button) => this.commands[button].execute());
   }
+
+  public undoCommands(...buttons: string[]): void {
+    buttons.map((button) => this.commands[button].undo());
+  }
 }

@@ -1,6 +1,6 @@
 export interface LightInterface {
-  on(): void;
-  off(): void;
-  brightUp(): void;
-  brightDown(): void;
+  on(): boolean;
+  off(): boolean;
+  brightUp(): number;
+  brightDown(): number;
 }
