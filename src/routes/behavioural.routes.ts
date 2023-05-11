@@ -3,12 +3,15 @@ import { Request, Response, Router } from 'express';
 import { CEOBudgetHandler } from 'patterns/behavioural/chain-of-responsibility/classes/ceo-budget-handler';
 import { CustomerBudget } from 'patterns/behavioural/chain-of-responsibility/classes/customer-budget';
 import { DirectorBudgetHandler } from 'patterns/behavioural/chain-of-responsibility/classes/director-budget-handler';
+import { Light } from 'patterns/behavioural/command/classes/light';
 import { MailchimpMailerStrategy } from 'patterns/behavioural/strategy/classes/mailchimp-mailer-strategy';
 import { MailerContext } from 'patterns/behavioural/strategy/classes/mailer-context';
 import { MailgunMailerStrategy } from 'patterns/behavioural/strategy/classes/mailgun-mailer-strategy';
 import { ManagerBudgetHandler } from 'patterns/behavioural/chain-of-responsibility/classes/manager-budget-handler';
+import { PowerLightCommand } from 'patterns/behavioural/command/classes/power-light-command';
 import { SellerBudgetHandler } from 'patterns/behavioural/chain-of-responsibility/classes/seller-budget-handler';
 import { SesMailerStrategy } from 'patterns/behavioural/strategy/classes/ses-mailer-strategy';
+import { UniversalLightControl } from 'patterns/behavioural/command/classes/universal-light-control';
 
 export const behaviouralRouter = Router();
 
@@ -64,3 +67,27 @@ behaviouralRouter.get(
     });
   }
 );
+
+behaviouralRouter.get('/command', (request: Request, response: Response) => {
+  const invoker = new UniversalLightControl();
+  const invoker2 = new UniversalLightControl();
+  const receiver1 = new Light();
+  const receiver2 = new Light();
+
+  invoker.addCommand('on', new PowerLightCommand(receiver1));
+  invoker.addCommand('off', new PowerLightCommand(receiver1));
+  invoker.addCommand('brightUp', new PowerLightCommand(receiver1));
+  invoker.addCommand('brightDown', new PowerLightCommand(receiver1));
+
+  invoker.executeCommands('on', 'brightUp', 'brightUp', 'brightUp', 'off');
+
+  invoker2.addCommand('on', new PowerLightCommand(receiver2));
+  invoker2.addCommand('brightUp', new PowerLightCommand(receiver2));
+
+  invoker.executeCommands('on', 'brightUp', 'brightUp', 'brightUp', 'off');
+
+  response.json({
+    type: 'classic',
+    result: 'check the console',
+  });
+});
