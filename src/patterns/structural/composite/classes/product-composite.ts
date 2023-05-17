@@ -1,8 +1,6 @@
 import { ProductComponent } from './product-component';
 
 export class ProductComposite extends ProductComponent {
-  protected children: ProductComponent[] = [];
-
   public add(...products: ProductComponent[]): void {
     products.forEach((product) => {
       this.setChildren(product);
@@ -22,13 +20,5 @@ export class ProductComposite extends ProductComponent {
       (totalPrice, child) => totalPrice + child.getPrice(),
       0
     );
-  }
-
-  public getChildren(): ProductComponent[] {
-    return this.children;
-  }
-
-  protected setChildren(children: ProductComponent): void {
-    this.children.push(children);
   }
 }
