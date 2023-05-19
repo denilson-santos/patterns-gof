@@ -2,6 +2,7 @@ import { Request, Response, Router } from 'express';
 
 import { BrightnessLightCommand } from 'patterns/behavioural/command/classes/britghtness-light-command';
 import { CEOBudgetHandler } from 'patterns/behavioural/chain-of-responsibility/classes/ceo-budget-handler';
+import { CompositeClassicCollection } from 'patterns/behavioural/iterator/classes/composite-classic-collection';
 import { CustomerBudget } from 'patterns/behavioural/chain-of-responsibility/classes/customer-budget';
 import { DirectorBudgetHandler } from 'patterns/behavioural/chain-of-responsibility/classes/director-budget-handler';
 import { Light } from 'patterns/behavioural/command/classes/light';
@@ -10,6 +11,8 @@ import { MailerContext } from 'patterns/behavioural/strategy/classes/mailer-cont
 import { MailgunMailerStrategy } from 'patterns/behavioural/strategy/classes/mailgun-mailer-strategy';
 import { ManagerBudgetHandler } from 'patterns/behavioural/chain-of-responsibility/classes/manager-budget-handler';
 import { PowerLightCommand } from 'patterns/behavioural/command/classes/power-light-command';
+import { ProductComposite } from 'patterns/structural/composite/classes/product-composite';
+import { ProductLeaf } from 'patterns/structural/composite/classes/product-leaf';
 import { SellerBudgetHandler } from 'patterns/behavioural/chain-of-responsibility/classes/seller-budget-handler';
 import { SesMailerStrategy } from 'patterns/behavioural/strategy/classes/ses-mailer-strategy';
 import { UniversalLightControl } from 'patterns/behavioural/command/classes/universal-light-control';
@@ -97,5 +100,52 @@ behaviouralRouter.get('/command', (request: Request, response: Response) => {
   response.json({
     type: 'classic',
     result: 'check the console',
+  });
+});
+
+behaviouralRouter.get('/iterator', (request: Request, response: Response) => {
+  const productsBox = new ProductComposite();
+
+  const mermaidBox = new ProductComposite();
+  const mermaidProduct1 = new ProductLeaf('Feijão', 10);
+  const mermaidProduct2 = new ProductLeaf('Macarrão', 7);
+  const mermaidProduct3 = new ProductLeaf('Arroz', 5);
+
+  mermaidBox.add(mermaidProduct1, mermaidProduct2, mermaidProduct3);
+
+  const coldBox = new ProductComposite();
+
+  const liquidColdBox = new ProductComposite();
+  const liquidColdProduct1 = new ProductLeaf('Yogurte', 8);
+  const liquidColdProduct2 = new ProductLeaf('Queijo', 15);
+  const liquidColdProduct3 = new ProductLeaf('Manteiga', 4);
+
+  liquidColdBox.add(liquidColdProduct1, liquidColdProduct2, liquidColdProduct3);
+
+  const nonLiquidColdBox = new ProductComposite();
+  const nonLiquidColdProduct1 = new ProductLeaf('Carne', 50);
+  const nonLiquidColdProduct2 = new ProductLeaf('Frango', 20);
+
+  nonLiquidColdBox.add(nonLiquidColdProduct1, nonLiquidColdProduct2);
+
+  coldBox.add(liquidColdBox, nonLiquidColdBox);
+
+  const singleProduct1 = new ProductLeaf('Vassoura', 25);
+  const singleProduct2 = new ProductLeaf('Rodo', 23);
+
+  productsBox.add(mermaidBox, coldBox, singleProduct1, singleProduct2);
+
+  const compositeCollection = new CompositeClassicCollection(productsBox);
+  const compositeIterator = compositeCollection.createCompositeIterator();
+
+  while (compositeIterator.hasNext()) {
+    const product = compositeIterator.next();
+
+    console.log('product', product);
+  }
+
+  response.json({
+    type: 'classic',
+    productsBoxPrice: productsBox.getPrice(),
   });
 });
