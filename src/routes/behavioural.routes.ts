@@ -2,6 +2,7 @@ import { Request, Response, Router } from 'express';
 
 import { BrightnessLightCommand } from 'patterns/behavioural/command/classes/britghtness-light-command';
 import { CEOBudgetHandler } from 'patterns/behavioural/chain-of-responsibility/classes/ceo-budget-handler';
+import { ChatMediator } from 'patterns/behavioural/mediator/classes/chat-mediator';
 import { CompositeClassicCollection } from 'patterns/behavioural/iterator/classes/composite-classic-collection';
 import { CustomerBudget } from 'patterns/behavioural/chain-of-responsibility/classes/customer-budget';
 import { DirectorBudgetHandler } from 'patterns/behavioural/chain-of-responsibility/classes/director-budget-handler';
@@ -16,6 +17,7 @@ import { ProductLeaf } from 'patterns/structural/composite/classes/product-leaf'
 import { SellerBudgetHandler } from 'patterns/behavioural/chain-of-responsibility/classes/seller-budget-handler';
 import { SesMailerStrategy } from 'patterns/behavioural/strategy/classes/ses-mailer-strategy';
 import { UniversalLightControl } from 'patterns/behavioural/command/classes/universal-light-control';
+import { User } from 'patterns/behavioural/mediator/classes/user';
 
 export const behaviouralRouter = Router();
 
@@ -147,5 +149,24 @@ behaviouralRouter.get('/iterator', (request: Request, response: Response) => {
   response.json({
     type: 'classic',
     productsBoxPrice: productsBox.getPrice(),
+  });
+});
+
+behaviouralRouter.get('/mediator', (request: Request, response: Response) => {
+  const chatMediator = new ChatMediator();
+
+  const user1 = new User('Denilson', chatMediator);
+  const user2 = new User('João', chatMediator);
+  const user3 = new User('Maria', chatMediator);
+
+  chatMediator.addUser(user1).addUser(user2).addUser(user3);
+
+  user1.sendMessage('Olá, tudo bem ?');
+  user2.sendMessage('Tudo bem, e você ?');
+  user3.sendMessage('Tudo ótimo!');
+
+  response.json({
+    type: 'classic',
+    result: 'check the console',
   });
 });
