@@ -6,6 +6,8 @@ import { ChatMediator } from 'patterns/behavioural/mediator/classes/chat-mediato
 import { CompositeClassicCollection } from 'patterns/behavioural/iterator/classes/composite-classic-collection';
 import { CustomerBudget } from 'patterns/behavioural/chain-of-responsibility/classes/customer-budget';
 import { DirectorBudgetHandler } from 'patterns/behavioural/chain-of-responsibility/classes/director-budget-handler';
+import { ImageEditor } from 'patterns/behavioural/memento/classes/image-editor';
+import { ImageEditorHistory } from 'patterns/behavioural/memento/classes/image-editor-history';
 import { Light } from 'patterns/behavioural/command/classes/light';
 import { MailchimpMailerStrategy } from 'patterns/behavioural/strategy/classes/mailchimp-mailer-strategy';
 import { MailerContext } from 'patterns/behavioural/strategy/classes/mailer-context';
@@ -164,6 +166,28 @@ behaviouralRouter.get('/mediator', (request: Request, response: Response) => {
   user1.sendMessage('Olá, tudo bem ?');
   user2.sendMessage('Tudo bem, e você ?');
   user3.sendMessage('Tudo ótimo!');
+
+  response.json({
+    type: 'classic',
+    result: 'check the console',
+  });
+});
+
+behaviouralRouter.get('/memento', (request: Request, response: Response) => {
+  const imageEditor = new ImageEditor('~/imagens/paisagem.jpg', 'jpg');
+  const imageEditorHistory = new ImageEditorHistory();
+
+  imageEditorHistory.undo(); // no state
+
+  console.log('Salvando estado atual.');
+  imageEditorHistory.saveStateInHistory(imageEditor.saveState());
+  imageEditor.convertTo('png');
+
+  console.log('Salvando estado atual.');
+  imageEditorHistory.saveStateInHistory(imageEditor.saveState());
+  imageEditor.convertTo('webp');
+
+  imageEditorHistory.undo(); // undo to png state
 
   response.json({
     type: 'classic',
