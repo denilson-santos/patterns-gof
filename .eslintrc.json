@@ -65,7 +65,7 @@
     "no-loop-func": "error",
     "no-mixed-requires": "error",
     "no-new-require": "error",
-    "no-param-reassign": "error",
+    "no-param-reassign": ["error", { "props": false }],
     "no-process-exit": "off",
     "no-return-await": "error",
     "no-throw-literal": "error",
