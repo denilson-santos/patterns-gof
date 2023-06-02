@@ -20,6 +20,9 @@ import { SellerBudgetHandler } from 'patterns/behavioural/chain-of-responsibilit
 import { SesMailerStrategy } from 'patterns/behavioural/strategy/classes/ses-mailer-strategy';
 import { UniversalLightControl } from 'patterns/behavioural/command/classes/universal-light-control';
 import { User } from 'patterns/behavioural/mediator/classes/user';
+import { TextEditor } from 'patterns/behavioural/observer/classes/text-editor';
+import { EventManager } from 'patterns/behavioural/observer/classes/event-manager';
+import { LogEventListener } from 'patterns/behavioural/observer/classes/log-event-listener';
 
 export const behaviouralRouter = Router();
 
@@ -191,6 +194,34 @@ behaviouralRouter.get('/memento', (request: Request, response: Response) => {
 
   response.json({
     type: 'classic',
+    result: 'check the console',
+  });
+});
+
+behaviouralRouter.get('/observer', (request: Request, response: Response) => {
+  const eventManager = new EventManager();
+  const textEditor = new TextEditor(eventManager);
+  const listener1 = new LogEventListener();
+
+  eventManager.subscribe('CREATING_FILE', listener1);
+  eventManager.subscribe('UPDATING_FILE', listener1);
+  eventManager.subscribe('DELETING_FILE', listener1);
+
+  const file1 = textEditor.createFile('index.html', '<div>Hello World!</div>');
+  const file1Edited = textEditor.editFile('index.html', '<div>Opa Fion!</div>');
+
+  const file2 = textEditor.createFile(
+    'index2.html',
+    '<div>Hello World2!</div>'
+  );
+  const file2Deleted = textEditor.deleteFile('index2.html');
+
+  response.json({
+    type: 'classic',
+    file1,
+    file1Edited,
+    file2,
+    file2Deleted,
     result: 'check the console',
   });
 });
