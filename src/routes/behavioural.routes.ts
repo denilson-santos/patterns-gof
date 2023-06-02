@@ -6,9 +6,11 @@ import { ChatMediator } from 'patterns/behavioural/mediator/classes/chat-mediato
 import { CompositeClassicCollection } from 'patterns/behavioural/iterator/classes/composite-classic-collection';
 import { CustomerBudget } from 'patterns/behavioural/chain-of-responsibility/classes/customer-budget';
 import { DirectorBudgetHandler } from 'patterns/behavioural/chain-of-responsibility/classes/director-budget-handler';
+import { EventManager } from 'patterns/behavioural/observer/classes/event-manager';
 import { ImageEditor } from 'patterns/behavioural/memento/classes/image-editor';
 import { ImageEditorHistory } from 'patterns/behavioural/memento/classes/image-editor-history';
 import { Light } from 'patterns/behavioural/command/classes/light';
+import { LogEventListener } from 'patterns/behavioural/observer/classes/log-event-listener';
 import { MailchimpMailerStrategy } from 'patterns/behavioural/strategy/classes/mailchimp-mailer-strategy';
 import { MailerContext } from 'patterns/behavioural/strategy/classes/mailer-context';
 import { MailgunMailerStrategy } from 'patterns/behavioural/strategy/classes/mailgun-mailer-strategy';
@@ -18,11 +20,9 @@ import { ProductComposite } from 'patterns/structural/composite/classes/product-
 import { ProductLeaf } from 'patterns/structural/composite/classes/product-leaf';
 import { SellerBudgetHandler } from 'patterns/behavioural/chain-of-responsibility/classes/seller-budget-handler';
 import { SesMailerStrategy } from 'patterns/behavioural/strategy/classes/ses-mailer-strategy';
+import { TextEditor } from 'patterns/behavioural/observer/classes/text-editor';
 import { UniversalLightControl } from 'patterns/behavioural/command/classes/universal-light-control';
 import { User } from 'patterns/behavioural/mediator/classes/user';
-import { TextEditor } from 'patterns/behavioural/observer/classes/text-editor';
-import { EventManager } from 'patterns/behavioural/observer/classes/event-manager';
-import { LogEventListener } from 'patterns/behavioural/observer/classes/log-event-listener';
 
 export const behaviouralRouter = Router();
 
@@ -202,10 +202,14 @@ behaviouralRouter.get('/observer', (request: Request, response: Response) => {
   const eventManager = new EventManager();
   const textEditor = new TextEditor(eventManager);
   const listener1 = new LogEventListener();
+  const listener2 = new LogEventListener();
 
   eventManager.subscribe('CREATING_FILE', listener1);
   eventManager.subscribe('UPDATING_FILE', listener1);
   eventManager.subscribe('DELETING_FILE', listener1);
+  eventManager.subscribe('UPDATING_FILE', listener2);
+  eventManager.subscribe('DELETING_FILE', listener2);
+  eventManager.unsubscribe('DELETING_FILE', listener2);
 
   const file1 = textEditor.createFile('index.html', '<div>Hello World!</div>');
   const file1Edited = textEditor.editFile('index.html', '<div>Opa Fion!</div>');
@@ -214,14 +218,19 @@ behaviouralRouter.get('/observer', (request: Request, response: Response) => {
     'index2.html',
     '<div>Hello World2!</div>'
   );
-  const file2Deleted = textEditor.deleteFile('index2.html');
+  const file2Edited = textEditor.editFile(
+    'index2.html',
+    '<div>Opa Fion2!</div>'
+  );
+
+  textEditor.deleteFile('index2.html');
 
   response.json({
     type: 'classic',
     file1,
     file1Edited,
     file2,
-    file2Deleted,
+    file2Edited,
     result: 'check the console',
   });
 });
