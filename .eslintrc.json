@@ -103,6 +103,7 @@
     "node/no-unsupported-features/es-syntax": [
       "warn",
       {
+        "version": ">=16.16",
         "ignores": ["modules"]
       }
     ],
