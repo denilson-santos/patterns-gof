@@ -1,4 +1,6 @@
+import { PurchaseOrderApproved } from './purchase-order-approved';
 import { PurchaseOrderInterface } from '../interfaces/purchase-order-interface';
+import { PurchaseOrderRejected } from './purchase-order-rejected';
 import { PurchaseOrderStateInterface } from '../interfaces/purchase-order-state-interface';
 
 export class PurchaseOrderPending implements PurchaseOrderStateInterface {
@@ -12,25 +14,30 @@ export class PurchaseOrderPending implements PurchaseOrderStateInterface {
 
   public pendingPayment(): void {
     console.log(
-      `A ordem de pagamento #${this.purchaseOrder.getId()} já está pendente.`
+      `A ordem de compra #${this.purchaseOrder.getId()} já está pendente.`
     );
   }
 
   public approvePayment(): void {
     console.log(
-      `A ordem de pagamento #${this.purchaseOrder.getId()} foi aprovada.`
+      `A ordem de compra #${this.purchaseOrder.getId()} foi aprovada.`
     );
+
+    this.purchaseOrder.setState(new PurchaseOrderApproved(this.purchaseOrder));
+    this.purchaseOrder.shipOrder();
   }
 
   public rejectPayment(): void {
     console.log(
-      `A ordem de pagamento #${this.purchaseOrder.getId()} foi rejeitada.`
+      `A ordem de compra #${this.purchaseOrder.getId()} foi rejeitada.`
     );
+
+    this.purchaseOrder.setState(new PurchaseOrderRejected(this.purchaseOrder));
   }
 
   public shipOrder(): void {
     console.log(
-      `A ordem de pagamento #${this.purchaseOrder.getId()} foi enviada.`
+      `A ordem de compra #${this.purchaseOrder.getId()} não pode ser enviada, pois ainda não foi aprovada.`
     );
   }
 }

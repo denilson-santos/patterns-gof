@@ -18,12 +18,13 @@ import { ManagerBudgetHandler } from 'patterns/behavioural/chain-of-responsibili
 import { PowerLightCommand } from 'patterns/behavioural/command/classes/power-light-command';
 import { ProductComposite } from 'patterns/structural/composite/classes/product-composite';
 import { ProductLeaf } from 'patterns/structural/composite/classes/product-leaf';
+import { PurchaseOrder } from 'patterns/behavioural/state/classes/purchase-order';
 import { SellerBudgetHandler } from 'patterns/behavioural/chain-of-responsibility/classes/seller-budget-handler';
 import { SesMailerStrategy } from 'patterns/behavioural/strategy/classes/ses-mailer-strategy';
 import { TextEditor } from 'patterns/behavioural/observer/classes/text-editor';
 import { UniversalLightControl } from 'patterns/behavioural/command/classes/universal-light-control';
 import { User } from 'patterns/behavioural/mediator/classes/user';
-import { PurchaseOrder } from 'patterns/behavioural/state/classes/purchase-order';
+import { PurchaseOrderPending } from 'patterns/behavioural/state/classes/purchase-order-pending';
 
 export const behaviouralRouter = Router();
 
@@ -237,9 +238,16 @@ behaviouralRouter.get('/observer', (request: Request, response: Response) => {
 });
 
 behaviouralRouter.get('/state', (request: Request, response: Response) => {
-  const purchase = new PurchaseOrder();
+  const purchase1 = new PurchaseOrder();
+  const purchase2 = new PurchaseOrder();
 
-  purchase.approvePayment();
+  purchase1.approvePayment();
+  purchase1.pendingPayment(); // It's already approved
+  purchase1.rejectPayment(); // It's already approved
+
+  purchase2.rejectPayment();
+  purchase2.setState(new PurchaseOrderPending(purchase2));
+  purchase2.approvePayment();
 
   response.json({
     type: 'classic',

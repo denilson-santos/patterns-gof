@@ -12,25 +12,25 @@ export class PurchaseOrderApproved implements PurchaseOrderStateInterface {
 
   public pendingPayment(): void {
     console.log(
-      `A ordem de pagamento #${this.purchaseOrder.getId()} não poder ser pendente, pois já foi aprovada.`
+      `A ordem de compra #${this.purchaseOrder.getId()} não poder ser pendente, pois já foi aprovada.`
     );
   }
 
   public approvePayment(): void {
     console.log(
-      `A ordem de pagamento #${this.purchaseOrder.getId()} já está aprovada.`
+      `A ordem de compra #${this.purchaseOrder.getId()} já está aprovada.`
     );
   }
 
   public rejectPayment(): void {
     console.log(
-      `A ordem de pagamento #${this.purchaseOrder.getId()} não pode ser rejeitada, pois já foi aprovada.`
+      `A ordem de compra #${this.purchaseOrder.getId()} não pode ser rejeitada, pois já foi aprovada.`
     );
   }
 
   public shipOrder(): void {
     console.log(
-      `A ordem de pagamento #${this.purchaseOrder.getId()} foi enviada.`
+      `A ordem de compra #${this.purchaseOrder.getId()} foi enviada.`
     );
   }
 }
