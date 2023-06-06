@@ -23,6 +23,7 @@ import { SesMailerStrategy } from 'patterns/behavioural/strategy/classes/ses-mai
 import { TextEditor } from 'patterns/behavioural/observer/classes/text-editor';
 import { UniversalLightControl } from 'patterns/behavioural/command/classes/universal-light-control';
 import { User } from 'patterns/behavioural/mediator/classes/user';
+import { PurchaseOrder } from 'patterns/behavioural/state/classes/purchase-order';
 
 export const behaviouralRouter = Router();
 
@@ -231,6 +232,17 @@ behaviouralRouter.get('/observer', (request: Request, response: Response) => {
     file1Edited,
     file2,
     file2Edited,
+    result: 'check the console',
+  });
+});
+
+behaviouralRouter.get('/state', (request: Request, response: Response) => {
+  const purchase = new PurchaseOrder();
+
+  purchase.approvePayment();
+
+  response.json({
+    type: 'classic',
     result: 'check the console',
   });
 });
