@@ -21,20 +21,18 @@ export class TextEditor {
   }
 
   public editFile(name: string, content: string): FileType {
-    let editedFile = null;
+    const index = this.files.findIndex((file) => file.fileName === name);
 
-    this.files.forEach((file) => {
-      if (file.fileName === name) {
-        file.fileName = name;
-        file.filePath = `/path/to/${name}`;
-        file.fileType = name.slice(name.indexOf('.'));
-        file.fileContent = content;
+    if (index === -1) {
+      throw new Error(`File not exists: ${name}`);
+    }
 
-        editedFile = file;
-      }
-    });
+    const editedFile = { ...this.files[index] };
 
-    if (!editedFile) throw new Error(`File not exists: ${name}`);
+    editedFile.fileName = name;
+    editedFile.filePath = `/path/to/${name}`;
+    editedFile.fileType = name.slice(name.indexOf('.'));
+    editedFile.fileContent = content;
 
     this.eventManager.notify('UPDATING_FILE', editedFile);
 
@@ -42,15 +40,15 @@ export class TextEditor {
   }
 
   public deleteFile(name: string): void {
-    this.files.every((file, index) => {
-      if (file.fileName === name) {
-        this.files.splice(index, 1);
-        this.eventManager.notify('DELETING_FILE', file);
-      } else if (index === this.files.length - 1) {
-        throw new Error(`File not exists: ${name}`);
-      }
+    const index = this.files.findIndex((file) => file.fileName === name);
 
-      return true;
-    });
+    if (index === -1) {
+      throw new Error(`File not exists: ${name}`);
+    }
+
+    const deletedFile = this.files[index];
+
+    this.files.splice(index, 1);
+    this.eventManager.notify('DELETING_FILE', deletedFile);
   }
 }
