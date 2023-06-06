@@ -10,7 +10,9 @@ export class PurchaseOrder implements PurchaseOrderInterface {
 
   public constructor() {
     this.state = new PurchaseOrderPending(this);
-    console.log(`A ordem de pagamento #${this.getId()} está pendente.`);
+    console.log(
+      `O state atual da ordem #${this.getId()} é "${this.state.getName()}".`
+    );
   }
 
   public getId(): string {
@@ -22,6 +24,10 @@ export class PurchaseOrder implements PurchaseOrderInterface {
   }
 
   public setState(state: PurchaseOrderStateInterface): void {
+    console.log(
+      `O state da ordem #${this.getId()} foi alterado de "${this.state.getName()}" para "${state.getName()}"`
+    );
+
     this.state = state;
   }
 
