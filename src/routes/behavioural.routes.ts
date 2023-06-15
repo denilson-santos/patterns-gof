@@ -4,11 +4,13 @@ import { BrightnessLightCommand } from 'patterns/behavioural/command/classes/bri
 import { CEOBudgetHandler } from 'patterns/behavioural/chain-of-responsibility/classes/ceo-budget-handler';
 import { ChatMediator } from 'patterns/behavioural/mediator/classes/chat-mediator';
 import { CompositeClassicCollection } from 'patterns/behavioural/iterator/classes/composite-classic-collection';
+import { CsvDataMiner } from 'patterns/behavioural/template-method/classes/csv-data-miner';
 import { CustomerBudget } from 'patterns/behavioural/chain-of-responsibility/classes/customer-budget';
 import { DirectorBudgetHandler } from 'patterns/behavioural/chain-of-responsibility/classes/director-budget-handler';
 import { EventManager } from 'patterns/behavioural/observer/classes/event-manager';
 import { ImageEditor } from 'patterns/behavioural/memento/classes/image-editor';
 import { ImageEditorHistory } from 'patterns/behavioural/memento/classes/image-editor-history';
+import { JsonDataMiner } from 'patterns/behavioural/template-method/classes/json-data-miner';
 import { Light } from 'patterns/behavioural/command/classes/light';
 import { LogEventListener } from 'patterns/behavioural/observer/classes/log-event-listener';
 import { MailchimpMailerStrategy } from 'patterns/behavioural/strategy/classes/mailchimp-mailer-strategy';
@@ -19,12 +21,13 @@ import { PowerLightCommand } from 'patterns/behavioural/command/classes/power-li
 import { ProductComposite } from 'patterns/structural/composite/classes/product-composite';
 import { ProductLeaf } from 'patterns/structural/composite/classes/product-leaf';
 import { PurchaseOrder } from 'patterns/behavioural/state/classes/purchase-order';
+import { PurchaseOrderPending } from 'patterns/behavioural/state/classes/purchase-order-pending';
 import { SellerBudgetHandler } from 'patterns/behavioural/chain-of-responsibility/classes/seller-budget-handler';
 import { SesMailerStrategy } from 'patterns/behavioural/strategy/classes/ses-mailer-strategy';
+import { TextDataMiner } from 'patterns/behavioural/template-method/classes/text-data-miner';
 import { TextEditor } from 'patterns/behavioural/observer/classes/text-editor';
 import { UniversalLightControl } from 'patterns/behavioural/command/classes/universal-light-control';
 import { User } from 'patterns/behavioural/mediator/classes/user';
-import { PurchaseOrderPending } from 'patterns/behavioural/state/classes/purchase-order-pending';
 
 export const behaviouralRouter = Router();
 
@@ -251,6 +254,24 @@ behaviouralRouter.get('/state', (request: Request, response: Response) => {
 
   response.json({
     type: 'classic',
+    result: 'check the console',
+  });
+});
+
+behaviouralRouter.get('/template-method', async (request: Request, response: Response) => {
+  const jsonDataMiner = new JsonDataMiner();
+  const textDataMiner = new TextDataMiner();
+  const csvDataMiner = new CsvDataMiner();
+
+  const jsonFile = await jsonDataMiner.mine('json-file.json');
+  const textFile = await textDataMiner.mine('text-file.txt');
+  const csvFile = await csvDataMiner.mine('csv-file.csv');
+
+  response.json({
+    type: 'classic',
+    jsonFile,
+    textFile,
+    csvFile,
     result: 'check the console',
   });
 });
