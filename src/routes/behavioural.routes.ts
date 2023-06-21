@@ -24,7 +24,10 @@ import { PurchaseOrder } from 'patterns/behavioural/state/classes/purchase-order
 import { PurchaseOrderPending } from 'patterns/behavioural/state/classes/purchase-order-pending';
 import { SellerBudgetHandler } from 'patterns/behavioural/chain-of-responsibility/classes/seller-budget-handler';
 import { SesMailerStrategy } from 'patterns/behavioural/strategy/classes/ses-mailer-strategy';
+import { SpreadsheetDocument } from 'patterns/behavioural/visitor/classes/spreadsheet-document';
+import { TestVisitor } from 'patterns/behavioural/visitor/classes/test-visitor';
 import { TextDataMiner } from 'patterns/behavioural/template-method/classes/text-data-miner';
+import { TextDocument } from 'patterns/behavioural/visitor/classes/text-document';
 import { TextEditor } from 'patterns/behavioural/observer/classes/text-editor';
 import { UniversalLightControl } from 'patterns/behavioural/command/classes/universal-light-control';
 import { User } from 'patterns/behavioural/mediator/classes/user';
@@ -258,20 +261,72 @@ behaviouralRouter.get('/state', (request: Request, response: Response) => {
   });
 });
 
-behaviouralRouter.get('/template-method', async (request: Request, response: Response) => {
-  const jsonDataMiner = new JsonDataMiner();
-  const textDataMiner = new TextDataMiner();
-  const csvDataMiner = new CsvDataMiner();
+behaviouralRouter.get(
+  '/template-method',
+  async (request: Request, response: Response) => {
+    const jsonDataMiner = new JsonDataMiner();
+    const textDataMiner = new TextDataMiner();
+    const csvDataMiner = new CsvDataMiner();
 
-  const jsonFile = await jsonDataMiner.mine('json-file.json');
-  const textFile = await textDataMiner.mine('text-file.txt');
-  const csvFile = await csvDataMiner.mine('csv-file.csv');
+    const jsonFile = await jsonDataMiner.mine('json-file.json');
+    const textFile = await textDataMiner.mine('text-file.txt');
+    const csvFile = await csvDataMiner.mine('csv-file.csv');
 
-  response.json({
-    type: 'classic',
-    jsonFile,
-    textFile,
-    csvFile,
-    result: 'check the console',
-  });
-});
+    response.json({
+      type: 'classic',
+      jsonFile,
+      textFile,
+      csvFile,
+      result: 'check the console',
+    });
+  }
+);
+
+behaviouralRouter.get(
+  '/visitor',
+  async (request: Request, response: Response) => {
+    const textDoc1 = new TextDocument(
+      'Text Document #1',
+      'Content in text document #1...'
+    );
+    const textDoc2 = new TextDocument(
+      'Text Document #2',
+      'Content in text document #2...'
+    );
+
+    const spreadsheetDoc1 = new SpreadsheetDocument(
+      'Spreadsheet Document #1',
+      'Content in spreadsheet document #1...'
+    );
+    const spreadsheetDoc2 = new SpreadsheetDocument(
+      'Spreadsheet Document #2',
+      'Content in spreadsheet document #2...'
+    );
+    const spreadsheetDoc3 = new SpreadsheetDocument(
+      'Document #3',
+      'Content in spreadsheet document #3...'
+    );
+
+    const allTextDocs = [textDoc1, textDoc2];
+    const allSpreadsheetDocs = [
+      spreadsheetDoc1,
+      spreadsheetDoc2,
+      spreadsheetDoc3,
+    ];
+
+    const testVisitor = new TestVisitor();
+
+    allTextDocs.forEach((doc) => {
+      testVisitor.visitTextDocument(doc);
+    });
+
+    allSpreadsheetDocs.forEach((doc) => {
+      testVisitor.visitSpreadsheetDocument(doc);
+    });
+
+    response.json({
+      type: 'classic',
+      result: 'check the console',
+    });
+  }
+);
