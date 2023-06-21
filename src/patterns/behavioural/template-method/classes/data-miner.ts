@@ -1,11 +1,11 @@
-import fs from "fs/promises";
+import fs from 'fs/promises';
 import path from 'path';
 
 export type OutputData = {
   name: string;
   email: string;
   age: number;
-}
+};
 
 export abstract class DataMiner {
   protected fileContent: string;
@@ -14,7 +14,7 @@ export abstract class DataMiner {
   public async mine(pathFile: string): Promise<OutputData[]> {
     await this.openFile(pathFile);
     this.extractData();
-    
+
     return this.clearData();
   }
 
@@ -22,7 +22,10 @@ export abstract class DataMiner {
     try {
       console.log(`Opening file "${pathFile}"`);
 
-      const file = await fs.readFile(path.join(__dirname, '..', 'storage', pathFile), 'utf8');
+      const file = await fs.readFile(
+        path.join(__dirname, '..', 'storage', pathFile),
+        'utf8'
+      );
 
       this.fileContent = file.toString();
     } catch (error) {
@@ -31,7 +34,7 @@ export abstract class DataMiner {
   }
 
   protected abstract extractData(): OutputData[];
-  
+
   protected abstract clearData(): OutputData[];
 
   public getData(): OutputData[] {
